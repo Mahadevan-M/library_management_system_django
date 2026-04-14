@@ -1,0 +1,51 @@
+{% extends 'base.html' %}
+
+{% block content %}
+{% if request.GET.q %}
+    <p class="mb-3">Showing results for: <b>{{ request.GET.q }}</b></p>
+{% endif %}
+
+<h3 class="mb-4">📚 All Books</h3>
+
+<div class="row">
+    {% for book in books %}
+    <div class="col-md-3 mb-4">
+
+        <div class="card p-3 shadow-sm">
+
+            <img src="{{ book.image.url }}" class="book-img mb-2">
+
+            <h5>{{ book.title }}</h5>
+            <p class="text-muted">{{ book.author }}</p>
+
+            <h6 class="text-success">₹{{ book.price }}</h6>
+
+            {% if book.is_borrowed %}
+
+            {% if book.borrowed_by == request.user %}
+            <a href="{% url 'toggle_borrow' book.id %}" class="btn btn-success btn-sm w-100 mb-1">
+                Return
+            </a>
+            {% else %}
+            <button class="btn btn-secondary btn-sm w-100 mb-1" disabled>
+                Unavailable
+            </button>
+            {% endif %}
+
+            {% else %}
+            <a href="{% url 'toggle_borrow' book.id %}" class="btn btn-primary btn-sm w-100 mb-1">
+                Borrow
+            </a>
+            {% endif %}
+
+            <a href="/wishlist/{{book.id}}" class="btn btn-warning btn-sm w-100">
+                ❤️ Wishlist
+            </a>
+
+        </div>
+
+    </div>
+    {% endfor %}
+</div>
+
+{% endblock %}

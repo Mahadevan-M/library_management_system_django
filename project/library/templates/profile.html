@@ -1,0 +1,68 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+<h3>👤 Profile</h3>
+
+<div class="card p-4 mb-4 shadow-sm text-center">
+    <h4>👤 {{ user.username }}</h4>
+    <p class="text-muted">Library Member</p>
+</div>
+<div class="row mt-4">
+
+
+    <div class="col-md-6">
+        <div class="card p-3 shadow-sm">
+            <h5>📦 Borrowed Books</h5>
+
+            {% for book in borrowed %}
+            <div class="card p-2 mb-2">
+
+                <b>{{ book.title }}</b><br>
+
+                Due Date: {{ book.due_date }}<br>
+
+                {% if book.get_penalty > 0 %}
+                <span class="text-danger">
+                    Penalty: ₹{{ book.get_penalty }}
+                </span>
+                {% else %}
+                <span class="text-success">No Penalty</span>
+                {% endif %}
+
+                <a href="{% url 'toggle_borrow' book.id %}" class="btn btn-success btn-sm mt-2">
+                    Return
+                </a>
+
+            </div>
+            {% endfor %}
+
+            <hr>
+            <h6>Total: ₹{{ total_price }}</h6>
+        </div>
+    </div>
+
+    <div class="col-md-6">
+        <div class="card p-3 shadow-sm">
+            <h5>❤️ Wishlist</h5>
+
+            {% for item in wishlist %}
+            <div class="d-flex justify-content-between align-items-center mb-2">
+
+                <span>{{ item.book.title }}</span>
+
+                <a href="{% url 'remove_wishlist' item.book.id %}" class="btn btn-danger btn-sm">
+                    Remove
+                </a>
+
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+
+</div>
+
+{% endblock %} 
+
+
+
