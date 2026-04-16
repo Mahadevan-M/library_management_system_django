@@ -6,6 +6,7 @@ from django.contrib import messages
 from .models import Book, Wishlist
 from datetime import timedelta
 from django.utils import timezone
+from django.views.decorators.cache import never_cache
 
 #REGISTER
 def register(request):
@@ -22,6 +23,7 @@ def register(request):
 
 
 #LOGIN
+@never_cache
 def user_login(request):
     if request.method == "POST":
         username = request.POST.get('username')
@@ -37,12 +39,14 @@ def user_login(request):
 
 
 # LOGOUT
+@never_cache
 def user_logout(request):
     logout(request)
     return redirect('login')
 
 
 # HOME (ADMIN ADD + EDIT BOOKS)
+@never_cache
 @login_required(login_url='login')
 def home(request):
     books = Book.objects.all()
@@ -91,6 +95,7 @@ def home(request):
 
 
 # ALL BOOKS + SEARCH
+@never_cache
 @login_required(login_url='login')
 def all_books(request):
     query = request.GET.get('q')
@@ -104,6 +109,7 @@ def all_books(request):
 
 
 #TOGGLE BORROW / RETURN
+@never_cache
 @login_required(login_url='login')
 def toggle_borrow(request, id):
     book = Book.objects.get(id=id)
